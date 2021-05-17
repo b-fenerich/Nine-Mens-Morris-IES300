@@ -1,0 +1,11 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    z-index: 99999;
+    &-profile{
+      display: flex;
+      flex: auto;
+      padding-left: 8px;
+    }
+  }
+  

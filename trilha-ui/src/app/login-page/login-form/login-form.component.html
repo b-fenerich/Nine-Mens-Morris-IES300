@@ -1,0 +1,45 @@
+<div @fadeState class="login-form">
+  <div class="top-form">
+    <div class="title">TRILHA</div>
+    <button class="butao" mat-raised-button [routerLink]="['/cadastro']" routerLinkActive="router-link-active">Criar
+      conta</button>
+  </div>
+  <mat-divider></mat-divider>
+
+  <form [formGroup]="loginForm" novalidate (ngSubmit)="onSubmit()">
+
+    <div class="forms">
+      <div>Já possui conta?</div>
+      <mat-form-field appearance="fill">
+        <mat-label>Nome de usuário</mat-label>
+        <input [disabled]="loading" matInput placeholder="Digite seu usuário..." formControlName="user">
+        <mat-hint align="end">Campo obrigatório*</mat-hint>
+        <mat-error *ngIf="loginForm.controls['user'].hasError('required')">
+          Por favor, digite seu e-mail de usuário
+        </mat-error>
+        <mat-error *ngIf="loginForm.controls['user'].hasError('email')">
+          O usuário deve ser um e-mail válido
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Senha</mat-label>
+        <input matInput [disabled]="loading" type="password" placeholder="Digite seu usuário..."
+          formControlName="password">
+        <mat-hint align="end">Campo obrigatório*</mat-hint>
+        <!-- <mat-error *ngIf="cadastroForm.controls['user'].hasError('required')">
+        Por favor, digite seu nome de usuário
+      </mat-error> -->
+        <!-- <mat-error *ngIf="cadastroForm.controls['user'].hasError('email')">
+        Seu usuário deve ser um e-mail
+      </mat-error> -->
+      </mat-form-field>
+      <div class="bottom-form">
+        <button class="butao" [routerLink]="['/menu']" routerLinkActive="router-link-active"
+          mat-raised-button>Login</button>
+        <button class="butao" mat-button>Esqueceu a senha?</button>
+      </div>
+
+
+    </div>
+  </form>
+</div>

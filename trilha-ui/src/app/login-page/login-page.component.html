@@ -1,0 +1,12 @@
+  <mat-card class="center-image">
+    <div class="content">
+      <div class="image-container">
+        <img class="image" height="400" src="src/assets/image.png" alt="">
+      </div>
+      <mat-divider vertical="true"></mat-divider>
+      <div class="login-container">
+        <app-login-form *ngIf="router.url === '/login'"></app-login-form>
+        <app-cadastro-form *ngIf="router.url === '/cadastro'"></app-cadastro-form>
+      </div>
+    </div>
+  </mat-card>

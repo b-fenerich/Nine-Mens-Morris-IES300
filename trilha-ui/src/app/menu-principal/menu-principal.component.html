@@ -1,0 +1,37 @@
+<mat-card class="center-image">
+  <div class="content">
+    <div class="title">TRILHA</div>
+    <div class="menu">
+      <button mat-raised-button class="botao" [routerLink]="['/jogo']" routerLinkActive="router-link-active">
+        <div>Jogar</div>
+        <mat-icon>
+          sports_esports
+        </mat-icon>
+      </button>
+
+      <button mat-raised-button class="botao" [routerLink]="['/loja']" routerLinkActive="router-link-active">
+        <div>Loja</div>
+        <mat-icon>
+          shopping_cart
+        </mat-icon>
+      </button>
+
+
+      <button mat-raised-button class="botao" [routerLink]="['/personalizar']" routerLinkActive="router-link-active">
+        <div>Personalizar</div>
+        <mat-icon>
+          manage_accounts
+        </mat-icon>
+      </button>
+
+
+      <button mat-raised-button class="botao" [routerLink]="['/estatistica']" routerLinkActive="router-link-active">
+        <div>Estatísticas</div>
+        <mat-icon>
+          leaderboard
+        </mat-icon>
+      </button>
+
+    </div>
+  </div>
+</mat-card>

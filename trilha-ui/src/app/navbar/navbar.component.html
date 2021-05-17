@@ -1,0 +1,6 @@
+<mat-toolbar class="navbar" color="primary">
+
+    <button @fadeState (click)="location.back()" *ngIf="!isHomeRouteActivated()" mat-icon-button matTooltip="Voltar">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+</mat-toolbar>    

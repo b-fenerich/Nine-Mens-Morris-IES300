@@ -1,0 +1,45 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #95B2F4;
+}
+
+.center-image {
+  align-items: center;
+  width: 55%;
+  height: 50%;
+  background-color: #6292FF;
+}
+
+.content{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.image-container{
+  display: block;
+  width: 50%;
+  // background-image: url('/src/assets/image.png');
+}
+
+.login-container{
+  display: block;
+  width: 50%;
+}
+
+.image {
+  display: flex;
+  background-image: url('src/assets/image.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mat-divider.mat-divider-vertical {
+  border-right-width: 3px;
+  border-right-color: white;
+}
