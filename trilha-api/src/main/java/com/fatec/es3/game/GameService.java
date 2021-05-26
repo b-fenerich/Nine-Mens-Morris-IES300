@@ -1,26 +1,18 @@
 package com.fatec.es3.game;
 
-import java.util.Arrays;
-import java.util.UUID;
-
-import com.fatec.es3.TrilhaApiApplication;
-import com.fatec.es3.game.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.stereotype.Service;
-
 import com.fatec.es3.exception.InvalidGameException;
 import com.fatec.es3.exception.InvalidGamePlayException;
 import com.fatec.es3.exception.InvalidParamException;
 import com.fatec.es3.exception.NotFoundException;
+import com.fatec.es3.game.model.*;
 import com.fatec.es3.game.storage.GameStorage;
 import com.fatec.es3.model.User;
 import com.fatec.es3.repository.UserRepository;
-
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import static com.fatec.es3.game.model.Player.pecasPosicionadas;
-import static com.fatec.es3.game.model.Player.pecasVivas;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -133,36 +125,63 @@ public class GameService {
 		return game;
 
 	}
-	
+
 	//Métodos para verificação de requisições
 
-	public void estagioPlayer() {
-		if (pecasPosicionadas<9) {
-			Player.valor = PlayerStage.STAGE1;
+	public static boolean movimentar(Game game, Tenant tenant, GamePlay gamePlay) {
+		int intervalo;
 
-		}
-		else if (pecasPosicionadas==9 & pecasVivas>3){
-			Player.valor = PlayerStage.STAGE2;
+		//verifica se o player esta mexendo na propria peça
+		if (((tenant == Tenant.PLAYER_1 && game.getPlayer1().getId() == gamePlay.getPlayer().getId()) ||
+				(tenant == Tenant.PLAYER_2 && game.getPlayer2().getId() == gamePlay.getPlayer().getId())) &&
+				game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.EMPTY)
 
-		}
-		else if (pecasPosicionadas==9 & pecasVivas==3){
-			Player.valor = PlayerStage.STAGE3;
+			//condição de movimentação estágio 1 e 3;
+			if ((gamePlay.getPlayer().getEstagioPlayer() == PlayerStage.STAGE1) || (gamePlay.getPlayer().getEstagioPlayer() == PlayerStage.STAGE3)) {
+				return true;
+			}
 
-		}
-		else if (pecasPosicionadas==9 & pecasVivas<3){
-			//METODO PERDEU
+		//condição de movimentação estágio 2;
+		if (gamePlay.getPlayer().getEstagioPlayer() == PlayerStage.STAGE2) {
+			if ((gamePlay.getCoordinateXAnt() != 3) && (gamePlay.getCoordinateYAnt() != 3)) {
+				return ((gamePlay.getCoordinateX() == gamePlay.getCoordinateXAnt()) && (gamePlay.getCoordinateY() == 3)) ||
+						((gamePlay.getCoordinateY() == gamePlay.getCoordinateYAnt()) && (gamePlay.getCoordinateX() == 3));
 
-		}
-	}
+			} else if ((gamePlay.getCoordinateXAnt() == 3)) {
+				intervalo = Math.abs(gamePlay.getCoordinateXAnt() - gamePlay.getCoordinateYAnt());
+				if (gamePlay.getCoordinateX() == (gamePlay.getCoordinateXAnt() + intervalo) || gamePlay.getCoordinateX() == (gamePlay.getCoordinateXAnt() - intervalo)
+						&& (gamePlay.getCoordinateYAnt() == gamePlay.getCoordinateY())) {
+					return true;
 
-	// movimentar() {
-	//
-	// estagio1() estagio2() estagio3()
-	// }
+				}
+				if ((gamePlay.getCoordinateYAnt() == 1) || (gamePlay.getCoordinateYAnt() == 5)) {
+					return gamePlay.getCoordinateY() == (gamePlay.getCoordinateYAnt() + 1) || gamePlay.getCoordinateY() == (gamePlay.getCoordinateYAnt() - 1)
+							&& (gamePlay.getCoordinateXAnt() == gamePlay.getCoordinateX());
 
-	public static boolean movimentar(Game game, Tenant tenant , GamePlay gamePlay) {
-		if (tenant == Tenant.PLAYER_1) {
-			return false;
+				} else if ((gamePlay.getCoordinateYAnt() == 0) || (gamePlay.getCoordinateYAnt() == 4)) {
+					return gamePlay.getCoordinateY() == (gamePlay.getCoordinateYAnt() + 1) && (gamePlay.getCoordinateXAnt() == gamePlay.getCoordinateX());
+
+				} else if ((gamePlay.getCoordinateYAnt() == 2) || (gamePlay.getCoordinateYAnt() == 6)) {
+					return gamePlay.getCoordinateY() == (gamePlay.getCoordinateYAnt() - 1) && (gamePlay.getCoordinateXAnt() == gamePlay.getCoordinateX());
+				}
+			} else if ((gamePlay.getCoordinateYAnt() == 3)) {
+				intervalo = Math.abs(gamePlay.getCoordinateXAnt() - gamePlay.getCoordinateYAnt());
+				if (gamePlay.getCoordinateY() == (gamePlay.getCoordinateYAnt() + intervalo) || gamePlay.getCoordinateY() == (gamePlay.getCoordinateYAnt() - intervalo) && (gamePlay.getCoordinateXAnt() == gamePlay.getCoordinateX())) {
+					return true;
+
+				}
+				if ((gamePlay.getCoordinateXAnt() == 1) || (gamePlay.getCoordinateXAnt() == 5)) {
+					return gamePlay.getCoordinateX() == (gamePlay.getCoordinateXAnt() + 1) || gamePlay.getCoordinateX() == (gamePlay.getCoordinateXAnt() - 1)
+							&& (gamePlay.getCoordinateYAnt() == gamePlay.getCoordinateY());
+
+				} else if ((gamePlay.getCoordinateXAnt() == 0) || (gamePlay.getCoordinateXAnt() == 4)) {
+					return gamePlay.getCoordinateX() == (gamePlay.getCoordinateXAnt() + 1) && (gamePlay.getCoordinateYAnt() == gamePlay.getCoordinateY());
+
+				} else if ((gamePlay.getCoordinateXAnt() == 2) || (gamePlay.getCoordinateXAnt() == 6)) {
+					return gamePlay.getCoordinateX() == (gamePlay.getCoordinateXAnt() - 1) && (gamePlay.getCoordinateYAnt() == gamePlay.getCoordinateY());
+				}
+			}
+
 		}
 
 		return false;
@@ -173,8 +192,8 @@ public class GameService {
 		int interval = -1;
 
 //		calculo para achar o intervalo
-		if(linha < 3) interval = 3 - linha;
-		if(linha > 3) interval = linha - 3;
+		if (linha < 3) interval = 3 - linha;
+		if (linha > 3) interval = linha - 3;
 		if(linha == 3) interval = 1;
 
 
@@ -248,18 +267,16 @@ public class GameService {
 	}
 
 	private boolean removePeca(Game game, Tenant tenant, GamePlay gamePlay) {
-		if (tenant == Tenant.PLAYER_1 && (game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.PLAYER_2)) {
+		if (game.getPlayer1().getId() == gamePlay.getPlayer().getId() && (game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.PLAYER_2)) {
 			game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] = Tenant.EMPTY;
 			return true;
-		} else if (tenant == Tenant.PLAYER_2 && (game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.PLAYER_1)) {
+
+		} else if (game.getPlayer2().getId() == gamePlay.getPlayer().getId() && (game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.PLAYER_1)) {
 			game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] = Tenant.EMPTY;
 			return true;
 		}
 		return false;
 	}
-
-
-
 
 
 }
