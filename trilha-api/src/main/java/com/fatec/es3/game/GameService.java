@@ -133,7 +133,7 @@ public class GameService {
 		return game;
 
 	}
-
+	
 	//Métodos para verificação de requisições
 
 	public void estagioPlayer() {
@@ -168,7 +168,6 @@ public class GameService {
 		return false;
 	}
 
-
 	public static boolean checkTrincaHorizontal(Tenant[][] boardState, int linha, int coluna, Tenant player) {
 
 		int interval = -1;
@@ -201,8 +200,6 @@ public class GameService {
 				if(boardState[linha][coluna - interval].getValue() == player.getValue() && boardState[linha][coluna - (interval * 2)].getValue() == player.getValue())
 					return true;
 				break;
-
-
 		}
 		return false;
 

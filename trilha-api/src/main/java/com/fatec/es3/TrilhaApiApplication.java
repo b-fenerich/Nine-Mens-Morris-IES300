@@ -9,5 +9,6 @@ public class TrilhaApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TrilhaApiApplication.class, args);
+
 	}
 }
