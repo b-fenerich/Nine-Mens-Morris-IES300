@@ -19,6 +19,9 @@ import com.fatec.es3.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
+import static com.fatec.es3.game.model.Player.pecasPosicionadas;
+import static com.fatec.es3.game.model.Player.pecasVivas;
+
 @Service
 @AllArgsConstructor
 public class GameService {
@@ -131,33 +134,46 @@ public class GameService {
 
 	}
 
-//	private boolean checkTrinca (Tenant[][] board) {
-//		boolean trinca = false;
-//
-//		for (int i = 0; i < 7; i++) {
-//			int sumHorizontal = 0;
-//			int sumVertical = 0;
-//
-//			for (int j = 0; j < 7; j++) {
-//				sumHorizontal += board[i][j].getValue();
-//				sumVertical += board[j][i].getValue();
-//			}
-//			if ((sumHorizontal == 3 )|| sumHorizontal == -3) {
-//				trinca = true;
-//			}
-//
-//			else if (sumVertical == 3 || sumVertical == -3) {
-//				trinca = true;
-//			}
-//		}
-//		return trinca;
-//	}
+	//Métodos para verificação de requisições
+
+	public void estagioPlayer() {
+		if (pecasPosicionadas<9) {
+			Player.valor = PlayerStage.STAGE1;
+
+		}
+		else if (pecasPosicionadas==9 & pecasVivas>3){
+			Player.valor = PlayerStage.STAGE2;
+
+		}
+		else if (pecasPosicionadas==9 & pecasVivas==3){
+			Player.valor = PlayerStage.STAGE3;
+
+		}
+		else if (pecasPosicionadas==9 & pecasVivas<3){
+			//METODO PERDEU
+
+		}
+	}
+
+	// movimentar() {
+	//
+	// estagio1() estagio2() estagio3()
+	// }
+
+	public static boolean movimentar(Game game, Tenant tenant , GamePlay gamePlay) {
+		if (tenant == Tenant.PLAYER_1) {
+			return false;
+		}
+
+		return false;
+	}
+
 
 	public static boolean checkTrincaHorizontal(Tenant[][] boardState, int linha, int coluna, Tenant player) {
 
 		int interval = -1;
 
-//        calculo para achar o intervalo
+//		calculo para achar o intervalo
 		if(linha < 3) interval = 3 - linha;
 		if(linha > 3) interval = linha - 3;
 		if(linha == 3) interval = 1;
@@ -192,12 +208,49 @@ public class GameService {
 
 	}
 
-	private boolean removePeca(Game game, Tenant player, int x, int y) {
-		if (player == Tenant.PLAYER_1 && (game.getBoard()[x][y] == Tenant.PLAYER_2)) {
-			game.getBoard()[x][y] = Tenant.EMPTY;
+	public static boolean checkTrincaVertical(Tenant[][] boardState, int linha, int coluna, Tenant player) {
+
+		int interval = -1;
+
+//		calculo para achar o intervalo
+		if(coluna < 3) interval = 3 - coluna;
+		if(coluna > 3) interval = coluna - 3;
+		if(coluna == 3) interval = 1;
+
+
+		//Define se peça foi colocada na esquerda, meio ou direita da possivel trinca
+		int meio;
+
+		if(linha - interval < 0 || boardState[linha - interval][coluna] == Tenant.INVALID) meio = - 1;
+		else if(linha + interval > 6 || boardState[linha + interval][coluna] == Tenant.INVALID) meio = 1;
+		else meio = 0;
+		//
+
+		//Verificação da trinca
+		switch (meio) {
+			case -1:
+				if(boardState[linha + interval][coluna].getValue() == player.getValue() && boardState[linha + (interval * 2)][coluna ].getValue() == player.getValue())
+					return true;
+				break;
+			case 0:
+				if(boardState[linha - interval][coluna].getValue() == player.getValue() && boardState[linha + interval][coluna].getValue() == player.getValue())
+					return true;
+				break;
+			case 1:
+				if(boardState[linha - interval][coluna].getValue() == player.getValue() && boardState[linha - (interval * 2)][coluna].getValue() == player.getValue())
+					return true;
+				break;
+
+	public static boolean checkTrinca(Tenant[][] boardState, int linha, int coluna, Tenant player) {
+		return (checkTrincaVertical(boardState, linha, coluna, player) || checkTrincaHorizontal(boardState, linha, coluna, player));
+	}
+
+	private boolean removePeca(Game game, Tenant tenant, GamePlay gamePlay) {
+		if (tenant == Tenant.PLAYER_1 && (game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.PLAYER_2)) {
+			game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] = Tenant.EMPTY;
 			return true;
-		} else if (player == Tenant.PLAYER_2 && (game.getBoard()[x][y] == Tenant.PLAYER_1)) {
-			game.getBoard()[x][y] = Tenant.EMPTY;
+		} else if (tenant == Tenant.PLAYER_2 && (game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] == Tenant.PLAYER_1)) {
+			game.getBoard()[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] = Tenant.EMPTY;
 			return true;
 		}
 		return false;
