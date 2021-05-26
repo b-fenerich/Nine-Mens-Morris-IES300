@@ -241,6 +241,11 @@ public class GameService {
 					return true;
 				break;
 
+
+		}
+		return false;
+	}
+
 	public static boolean checkTrinca(Tenant[][] boardState, int linha, int coluna, Tenant player) {
 		return (checkTrincaVertical(boardState, linha, coluna, player) || checkTrincaHorizontal(boardState, linha, coluna, player));
 	}
