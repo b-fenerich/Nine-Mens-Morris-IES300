@@ -18,10 +18,12 @@ public class Player {
 		if (this.pecasPosicionadas < 9) {
 			return PlayerStage.STAGE1;
 
-		} else if (this.pecasPosicionadas == 9 & this.pecasVivas > 3) {
+		}
+		else if (this.pecasPosicionadas == 9 & this.pecasVivas > 3) {
 			return PlayerStage.STAGE2;
 
-		} else return PlayerStage.STAGE3;
+		}
+		else return PlayerStage.STAGE3;
 
 	}
 

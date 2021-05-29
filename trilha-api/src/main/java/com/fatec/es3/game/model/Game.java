@@ -11,6 +11,6 @@ public class Game {
 	private Player player2;
 	private GameStatus gameStatus;
 	private Tenant[][] board;
-	private Tenant winner;
+	private Player loser; //alteramos de tipo Tenant para tipo Player
 
 }
