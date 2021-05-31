@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 import com.fatec.es3.model.PurchasedProduct;
 
 @Repository
-public interface PurchasedProductRepository extends JpaRepository<PurchasedProduct, Long> {
+public interface
+PurchasedProductRepository extends JpaRepository<PurchasedProduct, Long> {
 
 	@Query("SELECT u FROM PurchasedProduct u WHERE u.userId = :userId AND u.productId = :productId")
 	public PurchasedProduct getPurchasedProductByUserAndProductId(@Param("userId") long userId,
