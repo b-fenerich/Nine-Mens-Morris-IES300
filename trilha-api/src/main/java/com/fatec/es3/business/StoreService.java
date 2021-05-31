@@ -1,5 +1,6 @@
 package com.fatec.es3.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.es3.model.Product;
+import com.fatec.es3.model.ProductPlusActive;
 import com.fatec.es3.model.PurchasedProduct;
 import com.fatec.es3.model.User;
 import com.fatec.es3.repository.ProductRepository;
@@ -27,13 +29,69 @@ public class StoreService {
 	@Autowired
 	PurchasedProductRepository purchasedProductRepository;
 
-	public List<Product> listAllProducts() {
-		return productRepository.findAll();
+	public List<ProductPlusActive> listAllProducts(PurchasedProduct purchasedProduct) {
+		List<Product> products = productRepository.findAll();
+
+		User user = userRepository.findById(purchasedProduct.getUserId()).orElse(null);
+
+		List<ProductPlusActive> purchasedProducts = new ArrayList<>();
+
+		ProductPlusActive productPlusActive;
+
+		for (Product product : products) {
+			productPlusActive = new ProductPlusActive();
+			productPlusActive.setId(product.getId());
+			productPlusActive.setUrlImg(product.getPath());
+			productPlusActive.setValue(product.getValue());
+
+			if (user != null) {
+
+				PurchasedProduct foundPurchasedProduct = purchasedProductRepository
+						.getPurchasedProductByUserAndProductId(user.getId(), product.getId());
+
+				if (foundPurchasedProduct != null) {
+					productPlusActive.setEquipped(foundPurchasedProduct.isActive());
+					productPlusActive.setUserOwns(true);
+				} else {
+					productPlusActive.setEquipped(false);
+					productPlusActive.setUserOwns(false);
+				}
+			}
+
+			purchasedProducts.add(productPlusActive);
+
+		}
+
+		return purchasedProducts;
 	}
 
-	public Product getProductById(long id) {
-		// Caso não encontre o produto devolve um Product vazio
-		return productRepository.findById(id).orElse(new Product());
+	public ProductPlusActive getProductById(PurchasedProduct purchasedProduct) {
+
+		Product product = productRepository.findById(purchasedProduct.getProductId()).orElse(null);
+
+		ProductPlusActive productPlusActive = new ProductPlusActive();
+
+		if (product != null) {
+			productPlusActive.setId(product.getId());
+			productPlusActive.setUrlImg(product.getPath());
+			productPlusActive.setValue(product.getValue());
+			productPlusActive.setEquipped(false);
+			productPlusActive.setUserOwns(false);
+
+			User user = userRepository.findById(purchasedProduct.getUserId()).orElse(null);
+
+			if (user != null) {
+				PurchasedProduct foundPurchasedProduct = purchasedProductRepository
+						.getPurchasedProductByUserAndProductId(user.getId(), product.getId());
+
+				if (foundPurchasedProduct != null) {
+					productPlusActive.setEquipped(foundPurchasedProduct.isActive());
+					productPlusActive.setUserOwns(true);
+				}
+			}
+		}
+
+		return productPlusActive;
 	}
 
 	public Product buyProductById(PurchasedProduct purchasedProduct) {

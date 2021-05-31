@@ -16,8 +16,11 @@ import com.fatec.es3.repository.ProductRepository;
 import com.fatec.es3.repository.PurchasedProductRepository;
 import com.fatec.es3.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional
+@Slf4j
 public class CustomizeService {
 
 	@Autowired
@@ -39,9 +42,11 @@ public class CustomizeService {
 
 			if (selectedProduct != null) {
 				ProductPlusActive productPlusActive = new ProductPlusActive();
-				productPlusActive.setId(purchasedProduct.getId());
-				productPlusActive.setProduct(selectedProduct);
-				productPlusActive.setStatus(purchasedProduct.isActive());
+				productPlusActive.setId(selectedProduct.getId());
+				productPlusActive.setUrlImg(selectedProduct.getPath());
+				productPlusActive.setValue(selectedProduct.getValue());
+				productPlusActive.setEquipped(purchasedProduct.isActive());
+				productPlusActive.setUserOwns(true);
 
 				productsAvailable.add(productPlusActive);
 			}
@@ -54,20 +59,14 @@ public class CustomizeService {
 
 		ProductPlusActive productPlusActive = new ProductPlusActive();
 
-		// Busca produto adquirido, conforme dados do request
-		PurchasedProduct selectedPurchasedProduct = purchasedProductRepository.findById(purchasedProduct.getId())
-				.orElse(null);
-
-		if (selectedPurchasedProduct.getUserId() != purchasedProduct.getUserId()) {
-			// Verifica se o produto adquirido é do usuário solicitante
-			return productPlusActive;
-		}
+		PurchasedProduct selectedPurchasedProduct = purchasedProductRepository
+				.getPurchasedProductByUserAndProductId(purchasedProduct.getUserId(), purchasedProduct.getProductId());
 
 		// Se encontrou produto adquirido e já não estiver ativo
 		if (selectedPurchasedProduct != null && !selectedPurchasedProduct.isActive()) {
 
 			// Seleciona o produto equivalente na tabela de produtos a ser ativo
-			Product selectedProduct = productRepository.findById(selectedPurchasedProduct.getId()).orElse(null);
+			Product selectedProduct = productRepository.findById(selectedPurchasedProduct.getProductId()).orElse(null);
 
 			// Monta lista de produtos ativos para o usuario
 			List<PurchasedProduct> activePurchasedProducts = purchasedProductRepository
@@ -77,18 +76,20 @@ public class CustomizeService {
 			for (PurchasedProduct activepurchasedProduct : activePurchasedProducts) {
 
 				// Busca o produto ativo equivalente
-				Product product = productRepository.findById(activepurchasedProduct.getId()).orElse(null);
+				Product product = productRepository.findById(activepurchasedProduct.getProductId()).orElse(null);
 
 				// Se o tipo do produto ativo for igual a do produto a ser ativo, realiza a
 				// troca
-				if (product.getType().contains(selectedProduct.getType())) {
+				if (product.getType().equals(selectedProduct.getType())) {
 					selectedPurchasedProduct.setActive(true);
 					activepurchasedProduct.setActive(false);
 
 					// Preenche o response
-					productPlusActive.setId(selectedPurchasedProduct.getId());
-					productPlusActive.setProduct(selectedProduct);
-					productPlusActive.setStatus(selectedPurchasedProduct.isActive());
+					productPlusActive.setId(selectedProduct.getId());
+					productPlusActive.setUrlImg(selectedProduct.getPath());
+					productPlusActive.setValue(selectedProduct.getValue());
+					productPlusActive.setEquipped(selectedPurchasedProduct.isActive());
+					productPlusActive.setUserOwns(true);
 
 					break;
 				}

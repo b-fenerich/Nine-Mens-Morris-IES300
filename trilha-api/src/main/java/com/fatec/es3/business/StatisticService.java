@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.es3.model.Statistic;
-import com.fatec.es3.model.User;
 import com.fatec.es3.repository.StatisticRepository;
 import com.fatec.es3.repository.UserRepository;
 
@@ -20,10 +19,10 @@ public class StatisticService {
 	@Autowired
 	StatisticRepository statisticRepository;
 
-	public Statistic getStatistic(User user) {
+	public Statistic getStatistic(long id) {
 
-		if (userRepository.findById(user.getId()) != null) {
-			Statistic statistic = statisticRepository.getStatisticByUser(user.getId());
+		if (userRepository.findById(id) != null) {
+			Statistic statistic = statisticRepository.getStatisticByUser(id);
 
 			if (statistic != null) {
 				return statistic;

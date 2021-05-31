@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.es3.business.StoreService;
 import com.fatec.es3.model.Product;
+import com.fatec.es3.model.ProductPlusActive;
 import com.fatec.es3.model.PurchasedProduct;
 
 @RestController
@@ -23,16 +22,16 @@ public class StoreController {
 	@Autowired
 	StoreService storeService;
 
-	@GetMapping
-	public List<Product> getAll() {
+	@PostMapping("/listar")
+	public List<ProductPlusActive> getAll(@RequestBody PurchasedProduct purchasedProduct) {
 		// Retorna todos os produtos cadastrados na base de dados
-		return storeService.listAllProducts();
+		return storeService.listAllProducts(purchasedProduct);
 	}
 
-	@GetMapping("/{id}")
-	public Product getById(@PathVariable long id) {
+	@PostMapping("/consultar")
+	public ProductPlusActive getById(@RequestBody PurchasedProduct purchasedProduct) {
 		// Retorna produto pelo id
-		return storeService.getProductById(id);
+		return storeService.getProductById(purchasedProduct);
 	}
 
 	@PostMapping("/comprar")

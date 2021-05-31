@@ -8,8 +8,11 @@ public class ProductPlusActive {
 
 	private long id;
 
-	private Product product;
+	private String urlImg;
 
-	private boolean status;
+	private boolean equipped;
 
+	private boolean userOwns;
+
+	private double value;
 }
