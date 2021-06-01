@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.es3.business.StatisticService;
 import com.fatec.es3.model.Statistic;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/estatistica")
 public class StatisticController {
@@ -18,6 +21,7 @@ public class StatisticController {
 
 	@GetMapping("/{id}")
 	public Statistic getStatistic(@PathVariable long id) {
+		log.info("statistic request for userId: " + String.valueOf(id));
 		// Retorna estatisticas do usuario
 		return statisticService.getStatistic(id);
 	}

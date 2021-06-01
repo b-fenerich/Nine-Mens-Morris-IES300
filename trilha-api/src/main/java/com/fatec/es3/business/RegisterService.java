@@ -35,7 +35,7 @@ public class RegisterService {
 			User createdUser = userRepository.save(user);
 
 			// Cadastra produtos default para o usuario na tabela PurchasedProduct
-			for (long productId = 1; productId < 4; productId++) {
+			for (long productId = 1; productId < 3; productId++) {
 				// Produtos default:
 				// Tabuleiro -> productId = 1
 				// Peca1 -> productId = 2

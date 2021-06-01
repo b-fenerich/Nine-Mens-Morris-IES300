@@ -16,6 +16,9 @@ import com.fatec.es3.model.ProductPlusActive;
 import com.fatec.es3.model.PurchasedProduct;
 import com.fatec.es3.model.User;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/personalizar")
 public class CustomizeController {
@@ -25,6 +28,7 @@ public class CustomizeController {
 
 	@PostMapping
 	public List<ProductPlusActive> getAllProdcuts(@RequestBody User user) {
+		log.info("list products request for user: " + user.toString());
 		// Retorna todos os produtos comprados pelo usuario
 		return customizeService.listAllProducts(user);
 	}
@@ -32,8 +36,8 @@ public class CustomizeController {
 	@PutMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProductPlusActive buyProduct(@RequestBody PurchasedProduct purchasedProduct) {
+		log.info("activate product request: " + purchasedProduct.toString());
 		// Torna um produto comprado ativo
-
 		return customizeService.activeProduct(purchasedProduct);
 	}
 }

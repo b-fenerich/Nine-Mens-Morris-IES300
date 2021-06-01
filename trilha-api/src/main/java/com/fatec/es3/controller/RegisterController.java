@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.es3.business.RegisterService;
 import com.fatec.es3.model.User;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/cadastro")
 public class RegisterController {
@@ -21,7 +24,7 @@ public class RegisterController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public User doPost(@RequestBody User user) {
-
+		log.info("register request: " + user.toString());
 		return registerService.register(user);
 
 	}
