@@ -29,6 +29,10 @@ public class StoreService {
 	@Autowired
 	PurchasedProductRepository purchasedProductRepository;
 
+	public List<Product> listAllProducts() {
+		return productRepository.findAll();
+	}
+
 	public List<ProductPlusActive> listAllProducts(PurchasedProduct purchasedProduct) {
 		List<Product> products = productRepository.findAll();
 

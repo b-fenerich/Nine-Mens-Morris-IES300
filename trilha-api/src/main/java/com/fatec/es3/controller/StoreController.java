@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,14 @@ public class StoreController {
 	@Autowired
 	StoreService storeService;
 
+	@GetMapping("/listar")
+	public List<Product> getAll() {
+		log.info("list products request!");
+		return storeService.listAllProducts();
+	}
+
 	@PostMapping("/listar")
-	public List<ProductPlusActive> getAll(@RequestBody PurchasedProduct purchasedProduct) {
+	public List<ProductPlusActive> getAllByUser(@RequestBody PurchasedProduct purchasedProduct) {
 		log.info("list products request for userId: " + String.valueOf(purchasedProduct.getUserId()));
 		// Retorna todos os produtos cadastrados na base de dados
 		return storeService.listAllProducts(purchasedProduct);
