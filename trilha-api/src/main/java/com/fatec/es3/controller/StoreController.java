@@ -33,7 +33,7 @@ public class StoreController {
 	}
 
 	@PostMapping("/listar")
-	public List<ProductPlusActive> getAllByUser(@RequestBody PurchasedProduct purchasedProduct) {
+	public List<ProductPlusActive> getAll(@RequestBody PurchasedProduct purchasedProduct) {
 		log.info("list products request for userId: " + String.valueOf(purchasedProduct.getUserId()));
 		// Retorna todos os produtos cadastrados na base de dados
 		return storeService.listAllProducts(purchasedProduct);
