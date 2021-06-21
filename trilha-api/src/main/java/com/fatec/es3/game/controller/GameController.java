@@ -43,7 +43,7 @@ public class GameController {
 
 		Game game = gameService.connectToGame(request.getPlayer(), request.getGameId());
 		// Avisa ao player1 que um jogador entrou na partida
-		SimpMessagingTemplate.convertAndSend("/topic/game/progress/" + game.getGameId(), game);
+		SimpMessagingTemplate.convertAndSend("/topic/game-progress/" + game.getGameId(), game);
 
 		return ResponseEntity.ok(game);
 	}
@@ -54,7 +54,7 @@ public class GameController {
 
 		Game game = gameService.connectToRandomGame(player);
 		// Avisa ao player1 que um jogador entrou na partida
-		SimpMessagingTemplate.convertAndSend("/topic/game/progress/" + game.getGameId(), game);
+		SimpMessagingTemplate.convertAndSend("/topic/game-progress/" + game.getGameId(), game);
 
 		return ResponseEntity.ok(game);
 	}
@@ -66,7 +66,7 @@ public class GameController {
 
 		Game game = gameService.gamePlay(request);
 		// Avisa o outro jogador sobre a jogada
-		SimpMessagingTemplate.convertAndSend("/topic/game/progress/" + game.getGameId(), game);
+		SimpMessagingTemplate.convertAndSend("/topic/game-progress/" + game.getGameId(), game);
 
 		return ResponseEntity.ok(game);
 	}

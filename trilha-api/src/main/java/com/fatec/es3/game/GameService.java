@@ -33,11 +33,11 @@ public class GameService {
 
 
 
-		User user = (User) userRepository.findById(player.getId())
-				.orElseThrow(() -> new NotFoundException("Player not found"));
+		User user = (User) userRepository.getUserByUsername(player.getNickname());
+//				.orElseThrow(() -> new NotFoundException("Player not found"));
 
 		player.setNickname(user.getUsername());
-
+		player.setId(user.getId());
 		Game game = new Game();
 		game.setGameId(UUID.randomUUID().toString());
 
@@ -74,11 +74,11 @@ public class GameService {
 			throw new InvalidGameException("Game is not valid anymore");
 		}
 
-		User user = (User) userRepository.findById(player2.getId())
-				.orElseThrow(() -> new NotFoundException("Player not found"));
+		User user = (User) userRepository.getUserByUsername(player2.getNickname());
+//				.orElseThrow(() -> new NotFoundException("Player not found"));
 
 		player2.setNickname(user.getUsername());
-
+		player2.setId(user.getId());
 		game.setPlayer2(player2);
 		game.setGameStatus(GameStatus.IN_PROGRESS);
 		GameStorage.getInstance().setGame(game);
