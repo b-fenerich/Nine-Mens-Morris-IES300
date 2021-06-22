@@ -23,11 +23,12 @@ public class GameService {
 
 	public Game createGame(Player player, boolean privacy) throws NotFoundException {
 
-		User user = (User) userRepository.findById(player.getId())
-				.orElseThrow(() -> new NotFoundException("Player not found"));
+		User user = (User) userRepository.getUserByUsername(player.getNickname());
+//				.orElseThrow(() -> new NotFoundException("Player not found"));
 
 		player.setNickname(user.getUsername());
 
+		player.setId(user.getId());
 		Game game = new Game();
 		game.setGameId(UUID.randomUUID().toString());
 
@@ -64,11 +65,12 @@ public class GameService {
 			throw new InvalidGameException("Game is not valid anymore");
 		}
 
-		User user = (User) userRepository.findById(player2.getId())
-				.orElseThrow(() -> new NotFoundException("Player not found"));
+		User user = (User) userRepository.getUserByUsername(player2.getNickname());
+//				.orElseThrow(() -> new NotFoundException("Player not found"));
 
 		player2.setNickname(user.getUsername());
 
+		player2.setId(user.getId());
 		game.setPlayer2(player2);
 		game.setGameStatus(GameStatus.IN_PROGRESS);
 		GameStorage.getInstance().setGame(game);
@@ -115,7 +117,6 @@ public class GameService {
 
 		board[gamePlay.getCoordinateX()][gamePlay.getCoordinateY()] = gamePlay.getType();
 
-		// TODO: Implementar regras do jogo
 
 		game.setBoard(board);
 		GameStorage.getInstance().setGame(game);
@@ -293,7 +294,6 @@ public class GameService {
 		if(linha - interval < 0 || boardState[linha - interval][coluna] == Tenant.INVALID) meio = - 1;
 		else if(linha + interval > 6 || boardState[linha + interval][coluna] == Tenant.INVALID) meio = 1;
 		else meio = 0;
-		//
 
 		//Verificação da trinca
 		switch (meio) {
